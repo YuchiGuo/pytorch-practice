@@ -16,32 +16,39 @@ class CNN(nn.Module):
     def __init__(self):
         super().__init__()
         self.cnn_stack = nn.Sequential(
-            nn.Conv2d(1, 16, 5),
+            nn.Conv2d(1, 32, 3),
             nn.ReLU(),
-            nn.MaxPool2d(2, 2),
-            nn.Dropout(),
-            nn.Conv2d(16, 32, 5),
+            nn.BatchNorm2d(32), 
+            nn.Conv2d(32, 32, 3),
             nn.ReLU(),
+            nn.BatchNorm2d(32),
             nn.MaxPool2d(2, 2),
-            nn.Dropout(),
+            nn.Dropout(0.25),
+
+            nn.Conv2d(32, 64, 3),
+            nn.ReLU(),
+            nn.BatchNorm2d(64), 
+            nn.Conv2d(64, 64, 3),
+            nn.ReLU(),
+            nn.BatchNorm2d(64),
+            nn.MaxPool2d(2, 2),
+            nn.Dropout(0.25),
         )
         self.flatten = nn.Flatten()
         self.linear_relu_stack = nn.Sequential(
-            nn.Linear(32 * 4 * 4, 128),
+            nn.Linear(64 * 4 * 4, 512),
             nn.ReLU(),
-            nn.Linear(128, 128),
-            nn.ReLU(),
-            nn.Dropout(),
-            nn.Linear(128, 10),
+            nn.BatchNorm1d(512),
+            nn.Dropout(0.5),
+            nn.Linear(512, 10),
         )
 
     def forward(self, x):
-        # print(x.shape) # x has shape [64, 1, 28, 28]
+        # print(x.shape) # x has shape [32, 1, 28, 28]
         x = self.cnn_stack(x)
-        # print(x.shape) # [64, 16, 4, 4]
+        # print(x.shape) # [32, 32, 10, 10]
         x = self.flatten(x)
-        # print(x.shape) # [64, 16*4*4]
-        # x = torch.flatten(x, 1)
+        # print(x.shape) # [32, 32*10*10]
         logits = self.linear_relu_stack(x)
         return logits
 
@@ -97,7 +104,8 @@ def main():
     # setting hyperparameters
     learning_rate = 1e-3
     batch_size = 32
-    epochs = 20
+    epochs = 30
+
     # load data
     training_data = datasets.FashionMNIST(
         root="data",
@@ -170,7 +178,7 @@ def main():
     # Prevent overlapping labels and save
     plt.tight_layout()
     plt.savefig(
-        f"training_progress_cnn_learning_rate_{learning_rate}_batch_size_{batch_size}_optimizer_{type(optimizer).__name__}_with_dropout.png"
+        f"training_progress_cnn_learning_rate_{learning_rate}_batch_size_{batch_size}_optimizer_{type(optimizer).__name__}_vgg_like.png"
     )
 
 
