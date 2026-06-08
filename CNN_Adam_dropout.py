@@ -12,22 +12,22 @@ from torch import nn
 import torchvision.models as models
 
 
+# just to check usrname
 class CNN(nn.Module):
     def __init__(self):
         super().__init__()
         self.cnn_stack = nn.Sequential(
             nn.Conv2d(1, 32, 3),
             nn.ReLU(),
-            nn.BatchNorm2d(32), 
+            nn.BatchNorm2d(32),
             nn.Conv2d(32, 32, 3),
             nn.ReLU(),
             nn.BatchNorm2d(32),
             nn.MaxPool2d(2, 2),
             nn.Dropout(0.25),
-
             nn.Conv2d(32, 64, 3),
             nn.ReLU(),
-            nn.BatchNorm2d(64), 
+            nn.BatchNorm2d(64),
             nn.Conv2d(64, 64, 3),
             nn.ReLU(),
             nn.BatchNorm2d(64),
