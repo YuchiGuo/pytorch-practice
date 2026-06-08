@@ -12,7 +12,7 @@ from torch import nn
 import torchvision.models as models
 
 
-# just to check usrname
+# checking commit from using runpod
 class CNN(nn.Module):
     def __init__(self):
         super().__init__()
